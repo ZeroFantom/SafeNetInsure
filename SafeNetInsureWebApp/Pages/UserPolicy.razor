@@ -1,6 +1,6 @@
 ﻿@page "/user_service/policy"
 @attribute [Authorize]
-@using static Data.Services.ServiceDataPolicy;
+@using static SafeNetInsureWebApp.Data.Services.ServiceDataPolicy;
 @using SafeNetInsureWebApp.Models
 @inherits SafeNetInsureWebApp.Data.Component.TableDataComponent;
 
@@ -171,8 +171,7 @@
                                                       SortMode="DataGridSortMode.Multiple"
                                                       SelectionMode="DataGridSelectionMode.Single"
                                                       Virtualize
-                                                      VirtualizeOptions="@new VirtualizeOptions { DataGridHeight = "400px"
-}">
+                                                      VirtualizeOptions="@(new VirtualizeOptions { DataGridHeight = "400px" })">
                                                 <DataGridColumns>
                                                     <DataGridColumn Field="@nameof(ObjectInsurance.IdObjectInsurance)" Caption="Id Объекта страхования" Readonly="true"/>
                                                     <DataGridColumn Field="@nameof(ObjectInsurance.Title)" Caption="Наименование" Editable/>

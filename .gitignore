@@ -1,4 +1,6 @@
 .idea/
 bin/
 obj/
+SafeNetInsureWebApp/Migrations/
 SafeNetInsureWebApp/appsettings.json
+global.json

@@ -1,0 +1,103 @@
+﻿@page "/policy_service/administration"
+@attribute [Authorize(Policy = "AdminPolicy")]
+@using SafeNetInsureWebApp.Models
+@using static Data.Services.ServiceDataPolicy;
+@inherits SafeNetInsureWebApp.Data.Component.TableDataComponent;
+
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Таблица страхований</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="@Policy"
+                      Data="Policies"
+                      PageSize="20"
+                      TotalItems="@(Policies.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      RowRemoved="@DeleteModel"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(Policy.IdPolicy)" Caption="Id Страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.UserIdUser)" Caption="Id Пользователя"/>
+                    <DataGridColumn Field="@nameof(Policy.PolicyNumber)" Caption="Уникальный GUID страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.Status)" Caption="Статус страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.StartDate)" Caption="Начало страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.EndDate)" Caption="Конец страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.InsuranceType)" Caption="Тип страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.InsuranceAmout)" Caption="Сумма стразовки"/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Таблица условий страхования</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="ConditionPolicy"
+                      Data="ConditionPolicies"
+                      PageSize="20"
+                      TotalItems="@(ConditionPolicies.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      RowInserted="@InsertModel"
+                      RowUpdated="@(UpdateModel)"
+                      RowRemoved="@DeleteModel"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(ConditionPolicy.Id)" Caption="Id Условия политики" Readonly="true"/>
+                    <DataGridColumn Field="@nameof(ConditionPolicy.Title)" Caption="Заголовок" Editable/>
+                    <DataGridColumn Field="@nameof(ConditionPolicy.Condition)" Caption="Текст условия" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                            <Button Clicked="@context.Clicked">Добавить</Button>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удалить</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>

@@ -1,0 +1,97 @@
+﻿@page "/user-role_service/administration"
+@attribute [Authorize(Policy = "AdminPolicy")]
+@using SafeNetInsureWebApp.Models
+@using static Data.Services.ServiceAdministrationData;
+@inherits SafeNetInsureWebApp.Data.Component.TableDataComponent;
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Таблица ролей</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="@Role"
+                      Data="Roles"
+                      PageSize="20"
+                      TotalItems="@(Roles.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      RowUpdated="@(UpdateModel)"
+                      RowRemoved="@(DeleteModel)"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(Role.IdRole)" Caption="Id Пользователя" Readonly="true"/>
+                    <DataGridColumn Field="@nameof(Role.Title)"
+                                    Caption="Название роли (Администратор, Пользователь - по умолчанию)" Editable/>
+                    <DataGridColumn Field="@nameof(Role.Description)" Caption="Описание роли" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Таблица идентификатора роли и связанного пользователя</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="@RoleHasUser"
+                      Data="RoleHasUsers"
+                      PageSize="20"
+                      TotalItems="@(RoleHasUsers.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      RowUpdated="@(UpdateModel)"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(RoleHasUser.RoleIdRole)" Caption="Id Роли" Editable/>
+                    <DataGridColumn Field="@nameof(RoleHasUser.UserIdUser)" Caption="Id Пользователя" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>

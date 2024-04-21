@@ -1,0 +1,28 @@
+﻿@using System.Security.Claims
+@using SafeNetInsureWebApp.Data.Authorization
+<AuthorizeView>
+    <Authorized>
+        <Dropdown>
+            <Button Color="Color.Primary" Style="width: 20rem;"
+                    TextSize="TextSize.Small">
+                @(context.User.GetClaimIssuer(ClaimTypes.Name)?.Value ?? "Данные некорректны")
+            </Button>
+            <DropdownToggle Color="Color.Primary" Split/>
+            <DropdownMenu>
+                <DropdownItem href="user_service/logout">Выход</DropdownItem>
+                <DropdownDivider/>
+                <DropdownItem>Полисы</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    </Authorized>
+    <NotAuthorized>
+        <Dropdown>
+            <Button Color="Color.Primary" Style="width: 20rem;" TextSize="TextSize.Small">Не авторизован</Button>
+            <DropdownToggle Color="Color.Primary" Split/>
+            <DropdownMenu>
+                <DropdownItem href="user_service/login">Вход</DropdownItem>
+                <DropdownItem href="user_service/registration">Регистрация</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    </NotAuthorized>
+</AuthorizeView>

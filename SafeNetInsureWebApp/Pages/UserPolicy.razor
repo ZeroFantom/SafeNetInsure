@@ -1,0 +1,296 @@
+﻿@page "/user_service/policy"
+@attribute [Authorize]
+@using SafeNetInsureWebApp.Models
+@using static Data.Services.ServiceDataPolicy;
+@inherits SafeNetInsureWebApp.Data.Component.TableDataComponent;
+
+<Fields>
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Оформленные полисы страхования</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="@Policy"
+                      Data="ServiceDataUser.PoliciesUser"
+                      PageSize="20"
+                      TotalItems="@(ServiceDataUser.PoliciesUser.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      ShowValidationsSummary="false"
+                      DetailRowStartsVisible="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(Policy.IdPolicy)" Caption="Id Страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.UserIdUser)" Caption="Id Пользователя"/>
+                    <DataGridColumn Field="@nameof(Policy.PolicyNumber)" Caption="Уникальный GUID страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.Status)" Caption="Статус страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.StartDate)" Caption="Начало страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.EndDate)" Caption="Конец страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.InsuranceType)" Caption="Тип страховки"/>
+                    <DataGridColumn Field="@nameof(Policy.InsuranceAmout)" Caption="Сумма стразовки"/>
+                </DataGridColumns>
+                <DetailRowTemplate>
+                    @{
+                        var conditionPolicies = context.ConditionPolicyIdConditionPolicies;
+                        var iobInsuranceIdObjectInsurances = context.ObjectInsuranceIdObjectInsurances;
+                        <Card>
+                            <CardBody>
+                                <Field>
+                                    <DataGrid TItem="@ConditionPolicy"
+                                              Data="conditionPolicies"
+                                              ShowCaptions="true"
+                                              PageSize="2"
+                                              ShowPager="true"
+                                              Responsive
+                                              Sortable>
+                                        <DataGridColumns>
+                                            <DataGridColumn Field="@nameof(ConditionPolicy.IdConditionPolicy)"
+                                                            Caption="Id Условия страхования" Readonly="true"/>
+                                            <DataGridColumn Field="@nameof(ConditionPolicy.Condition)"
+                                                            Caption="Текст условия" Editable/>
+                                        </DataGridColumns>
+                                    </DataGrid>
+                                </Field>
+                                <Field>
+                                    <DataGrid TItem="@ObjectInsurance"
+                                              Data="@iobInsuranceIdObjectInsurances"
+                                              ShowCaptions="true"
+                                              PageSize="2"
+                                              ShowPager="true"
+                                              Responsive
+                                              Sortable>
+                                        <DataGridColumns>
+                                            <DataGridColumn Field="@nameof(ObjectInsurance.IdObjectInsurance)"
+                                                            Caption="Id Объекта" Readonly="true"/>
+                                            <DataGridColumn Field="@nameof(ObjectInsurance.Title)"
+                                                            Caption="Наименование объекта" Editable/>
+                                            <DataGridColumn Field="@nameof(ObjectInsurance.Description)"
+                                                            Caption="Описание объекта страхования" Editable/>
+                                        </DataGridColumns>
+                                    </DataGrid>
+                                </Field>
+                            </CardBody>
+                        </Card>
+                    }
+                </DetailRowTemplate>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>
+<Field>
+<Card>
+    <CardTitle TextSize="TextSize.Heading1">
+        Оформление страхования
+    </CardTitle>
+    <CardBody>
+        <Row>
+            <Column>
+                <Card Class="login-card-class">
+                    <CardHeader>
+                        <Text>
+                            Запрос на оформление страхования
+                        </Text>
+                    </CardHeader>
+                    <CardBody>
+                        <Form>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>
+                                        Уникальный идентификатор страхования
+                                    </FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit InputMode="TextInputMode.Text"
+                                                  Text="@(ServiceDataUser.Policy.PolicyNumber.ToString())"
+                                                  ReadOnly="true"/>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Начало действия страховки</FieldLabel>
+                                    <FieldBody>
+                                        <DateEdit Date="@ServiceDataUser.Policy.StartDate"
+                                                  InputMode="DateInputMode.DateTime" ReadOnly="true"/>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Конец действия страховки</FieldLabel>
+                                    <FieldBody>
+                                        <DateEdit @bind-Date="@ServiceDataUser.Policy.EndDate"
+                                                  InputMode="DateInputMode.DateTime">
+                                            <Feedback>
+                                                <ValidationSuccess>
+                                                    Дата соответствует правилам.
+                                                </ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </DateEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>
+                                        Выберите условия страхования из предложенных
+                                    </FieldLabel>
+                                    <FieldBody>
+                                        <DataGrid TItem="ConditionPolicy"
+                                                  Data="ConditionPolicies"
+                                                  TotalItems="@(ConditionPolicies.Count)"
+                                                  ShowPager="true"
+                                                  Responsive
+                                                  Editable
+                                                  Filterable
+                                                  Sortable
+                                                  @bind-SelectedRows="ServiceDataUser.Policy.ConditionPolicyIdConditionPolicies"
+                                                  FilterMode="DataGridFilterMode.Menu"
+                                                  SortMode="DataGridSortMode.Multiple"
+                                                  SelectionMode="DataGridSelectionMode.Multiple"
+                                                  Virtualize
+                                                  VirtualizeOptions="@(new VirtualizeOptions { DataGridHeight = "400px" })">
+                                            <DataGridColumns>
+                                                <DataGridColumn
+                                                    Field="@nameof(ConditionPolicy.IdConditionPolicy)"
+                                                    Caption="Id Условия политики"/>
+                                                <DataGridColumn Field="@nameof(ConditionPolicy.Title)"
+                                                                Caption="Заголовок"/>
+                                                <DataGridColumn Field="@nameof(ConditionPolicy.Condition)"
+                                                                Caption="Текст условия"/>
+                                            </DataGridColumns>
+                                        </DataGrid>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is7.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Добавьте объект страхования</FieldLabel>
+                                    <FieldBody>
+                                        <DataGrid TItem="ObjectInsurance"
+                                                  Data="ServiceDataUser.Policy.ObjectInsuranceIdObjectInsurances"
+                                                  TotalItems="@(ServiceDataUser.Policy.ObjectInsuranceIdObjectInsurances.Count)"
+                                                  ShowPager="true"
+                                                  Responsive
+                                                  Editable
+                                                  Filterable
+                                                  Sortable
+                                                  @bind-SelectedRows="ServiceDataUser.Policy.ObjectInsuranceIdObjectInsurances"
+                                                  RowInserted="@(InsertModel)"
+                                                  RowUpdated="@(UpdateModel)"
+                                                  RowRemoved="@(DeleteModel)"
+                                                  FilterMode="DataGridFilterMode.Menu"
+                                                  SortMode="DataGridSortMode.Multiple"
+                                                  SelectionMode="DataGridSelectionMode.Single"
+                                                  Virtualize
+                                                  VirtualizeOptions="@(new VirtualizeOptions { DataGridHeight = "400px" })">
+                                            <DataGridColumns>
+                                                <DataGridColumn
+                                                    Field="@nameof(ObjectInsurance.IdObjectInsurance)"
+                                                    Caption="Id Объекта страхования" Readonly="true"/>
+                                                <DataGridColumn Field="@nameof(ObjectInsurance.Title)"
+                                                                Caption="Наименование" Editable/>
+                                                <DataGridColumn Field="@nameof(ObjectInsurance.Description)"
+                                                                Caption="Описание" Editable/>
+                                                <DataGridColumn
+                                                    Field="@nameof(ObjectInsurance.DataObjectInsurance)"
+                                                    Caption="Описание в формате Json" Editable/>
+                                                <DataGridCommandColumn>
+                                                    <NewCommandTemplate>
+                                                        <Button Clicked="@context.Clicked">Добавить</Button>
+                                                    </NewCommandTemplate>
+                                                    <SaveCommandTemplate>
+                                                        <Button Clicked="@context.Clicked">Сохранить</Button>
+                                                    </SaveCommandTemplate>
+                                                    <EditCommandTemplate>
+                                                        <Button Clicked="@context.Clicked">
+                                                            Редактирование
+                                                        </Button>
+                                                    </EditCommandTemplate>
+                                                    <DeleteCommandTemplate>
+                                                        <Button Clicked="@context.Clicked">Удаление</Button>
+                                                    </DeleteCommandTemplate>
+                                                    <CancelCommandTemplate>
+                                                        <Button Clicked="@context.Clicked">Отмена</Button>
+                                                    </CancelCommandTemplate>
+                                                </DataGridCommandColumn>
+                                            </DataGridColumns>
+                                        </DataGrid>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>
+                                        Сумма итоговых выплат, в случае исполнения
+                                        договора страхования
+                                    </FieldLabel>
+                                    <FieldBody>
+                                        <NumericPicker @bind-Value="@ServiceDataUser.Policy.InsuranceAmout"
+                                                       CurrencySymbol="Руб " ReadOnly="true">
+                                            <Feedback>
+                                                <ValidationError/>
+                                            </Feedback>
+                                        </NumericPicker>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Тип страхования</FieldLabel>
+                                    <FieldBody>
+                                        <SelectList TItem="Policy.InsType"
+                                                    TValue="Policy.InsType"
+                                                    Data="@(Enum.GetValues(typeof(Policy.InsType)).Cast<Policy.InsType>())"
+                                                    TextField="@(item => item.ToString())"
+                                                    ValueField="@(item => item)"
+                                                    @bind-SelectedValue="@ServiceDataUser.Policy.InsuranceType"
+                                                    DefaultItemText="Выберите тип страхования"/>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Сумма страхования</FieldLabel>
+                                    <FieldBody>
+                                        <NumericPicker @bind-Value="@ServiceDataUser.Policy.InsureAmoutUser"
+                                                       CurrencySymbol="Руб" ModifyValueOnWheel
+                                                       WheelOn="NumericWheelOn.Hover" Min="1000"
+                                                       Max="1000000000"/>
+                                    </FieldBody>
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Buttons>
+                                    <Button @onclick="PostUserPolicy">
+                                        Отправить форму
+                                    </Button>
+                                    <Button href="/">
+                                        Назад
+                                    </Button>
+                                </Buttons>
+                            </Row>
+                        </Form>
+                    </CardBody>
+                </Card>
+            </Column>
+        </Row>
+    </CardBody>
+</Card>
+</Field>
+</Fields>
+<Alert @ref="AlertUser" Color="AlertColor">
+    <AlertMessage>
+        @AlertTitle
+    </AlertMessage>
+    <AlertDescription>
+        @AlertTitle
+    </AlertDescription>
+</Alert>

@@ -1,0 +1,104 @@
+﻿@page "/user_service/administration"
+@attribute [Authorize(Policy = "AdminPolicy")]
+@using SafeNetInsureWebApp.Models
+@using static Data.Services.ServiceAdministrationData;
+@inherits SafeNetInsureWebApp.Data.Component.TableDataComponent;
+
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Таблица пользователей</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="@User"
+                      Data="Users"
+                      PageSize="20"
+                      TotalItems="@(Users.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      RowUpdated="@(UpdateModel)"
+                      RowRemoved="@(DeleteModel)"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(User.IdUser)" Caption="Id Пользователя" Readonly="true"/>
+                    <DataGridColumn Field="@nameof(User.Email)" Caption="Почта" Editable/>
+                    <DataGridColumn Field="@nameof(User.Password)" Caption="Пароль" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                            <Button Clicked="@context.Clicked">Удаление</Button>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>
+<Field>
+    <Card>
+        <CardTitle>
+            <Text TextSize="TextSize.Heading1">Таблица профилей пользователей</Text>
+        </CardTitle>
+        <CardBody>
+            <DataGrid TItem="@UserInfo"
+                      Data="UserInfos"
+                      PageSize="20"
+                      TotalItems="@(UserInfos.Count)"
+                      ShowPager="true"
+                      Responsive
+                      Editable
+                      Filterable
+                      Sortable
+                      UseValidation
+                      RowUpdated="@(UpdateModel)"
+                      FilterMode="DataGridFilterMode.Menu"
+                      SortMode="DataGridSortMode.Multiple"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      ShowValidationsSummary="false">
+                <DataGridColumns>
+                    <DataGridColumn Field="@nameof(UserInfo.UserIdUser)" Caption="Id Пользователя" Readonly="true"/>
+                    <DataGridColumn Field="@nameof(UserInfo.IdUserInfo)" Caption="Id Профиля Пользователя"
+                                    Readonly="true"/>
+                    <DataGridColumn Field="@nameof(UserInfo.FirstName)" Caption="Имя" Editable/>
+                    <DataGridColumn Field="@nameof(UserInfo.LastName)" Caption="Фамилия" Editable/>
+                    <DataGridColumn Field="@nameof(UserInfo.Adress)" Caption="Адрес" Editable/>
+                    <DataGridColumn Field="@nameof(UserInfo.Gender)" Caption="Пол" Editable/>
+                    <DataGridColumn Field="@nameof(UserInfo.BirthDate)" Caption="Дата рождения" Editable/>
+                    <DataGridColumn Field="@nameof(UserInfo.PhoneNumber)" Caption="Номер телефона" Editable/>
+                    <DataGridCommandColumn>
+                        <NewCommandTemplate>
+                        </NewCommandTemplate>
+                        <SaveCommandTemplate>
+                            <Button Clicked="@context.Clicked">Сохранить</Button>
+                        </SaveCommandTemplate>
+                        <EditCommandTemplate>
+                            <Button Clicked="@context.Clicked">Редактирование</Button>
+                        </EditCommandTemplate>
+                        <DeleteCommandTemplate>
+                        </DeleteCommandTemplate>
+                        <CancelCommandTemplate>
+                            <Button Clicked="@context.Clicked">Отмена</Button>
+                        </CancelCommandTemplate>
+                    </DataGridCommandColumn>
+                </DataGridColumns>
+            </DataGrid>
+        </CardBody>
+    </Card>
+</Field>

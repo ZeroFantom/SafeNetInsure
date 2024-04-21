@@ -1,0 +1,8 @@
+﻿@page "/error?code=ErrorCode"
+<h3>Статус код: @ErrorCode</h3>
+
+@code {
+
+    [Parameter] public string? ErrorCode { get; set; }
+
+}

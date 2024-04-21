@@ -1,0 +1,67 @@
+﻿@page "/user_service/login"
+@inherits SafeNetInsureWebApp.Data.Component.LoginDataComponent;
+
+<Row>
+    <Field>
+        <FieldLabel TextSize="TextSize.Heading1">Авторизация</FieldLabel>
+    </Field>
+
+    <Column>
+        <Card Class="login-card-class">
+            <CardHeader>
+                <Text>
+                    Войдите в аккаунт
+                </Text>
+            </CardHeader>
+            <CardBody>
+                <Validations @ref="@Validator" Mode="ValidationMode.Auto" Model="@Client"
+                             HandlerType="typeof(FluentValidationHandler)" ValidateOnLoad="false">
+                    <Form>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Email</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите email..." InputMode="TextInputMode.Email"
+                                                  @bind-Text="@Client.Email">
+                                            <Feedback>
+                                                <ValidationSuccess>Email свободен.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Пароль</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите пароль..." @bind-Text="@Client.Password"
+                                                  Role="TextRole.Password">
+                                            <Feedback>
+                                                <ValidationSuccess>Пароль соответствует правилам.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Buttons>
+                                <Button @onclick="Login">
+                                    Вход
+                                </Button>
+                                <Button href="/">
+                                    Назад
+                                </Button>
+                            </Buttons>
+                        </Row>
+                    </Form>
+                </Validations>
+            </CardBody>
+        </Card>
+    </Column>
+</Row>

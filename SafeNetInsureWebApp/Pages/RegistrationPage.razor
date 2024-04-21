@@ -1,0 +1,169 @@
+﻿@page "/user_service/registration"
+@using SafeNetInsureWebApp.Models
+@using static Data.Services.ServiceAdministrationData;
+@inherits SafeNetInsureWebApp.Data.Component.RegistrationDataComponent;
+
+<Row>
+    <Field>
+        <FieldLabel TextSize="TextSize.Heading1">Регистрация</FieldLabel>
+    </Field>
+
+    <Column>
+        <Card Class="login-card-class">
+            <CardHeader>
+                <Text>
+                    Зарегистрируйте аккаунт
+                </Text>
+            </CardHeader>
+            <CardBody>
+                <Validations @ref="@Validator" Mode="ValidationMode.Auto" Model="@Client"
+                             HandlerType="typeof(FluentValidationHandler)" ValidateOnLoad="false">
+                    <Form>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Email</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите email..." InputMode="TextInputMode.Email"
+                                                  @bind-Text="@Client.Email">
+                                            <Feedback>
+                                                <ValidationSuccess>Email свободен.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Пароль</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите пароль..." @bind-Text="@Client.Password"
+                                                  Role="TextRole.Password">
+                                            <Feedback>
+                                                <ValidationSuccess>Пароль соответствует правилам.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Имя</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите имя..." @bind-Text="@Client.UserInfo.FirstName">
+                                            <Feedback>
+                                                <ValidationSuccess>Имя соответствует правилам</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Фамилия</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите фамилию..."
+                                                  @bind-Text="@Client.UserInfo.LastName">
+                                            <Feedback>
+                                                <ValidationSuccess>Фамилия соответствует правилам.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                <FieldLabel RequiredIndicator>Пол</FieldLabel>
+                                <FieldBody>
+                                    <SelectList TItem="UserInfo.Sex"
+                                                TValue="UserInfo.Sex"
+                                                Data="@(Enum.GetValues(typeof(UserInfo.Sex)).Cast<UserInfo.Sex>())"
+                                                TextField="@(item => item.ToString())"
+                                                ValueField="@(item => item)"
+                                                @bind-SelectedValue="@Client.UserInfo.Gender"
+                                                DefaultItemText="Выберите пол"/>
+                                </FieldBody>
+                            </Field>
+                        </Row>
+                        <Row>
+                            <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                <FieldLabel RequiredIndicator>Дата рождения</FieldLabel>
+                                <FieldBody>
+                                    <DateEdit TValue="@(DateTime?)" Date="@Client.UserInfo.BirthDate"
+                                              InputMode="DateInputMode.DateTime" DateChanged="@Callback"/>
+                                </FieldBody>
+                            </Field>
+                        </Row>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Адрес</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите адрес..." @bind-Text="@Client.UserInfo.Adress">
+                                            <Feedback>
+                                                <ValidationSuccess>Адрес соответствует правилам.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Validation>
+                                <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                    <FieldLabel RequiredIndicator>Номер телефона</FieldLabel>
+                                    <FieldBody>
+                                        <TextEdit Placeholder="Введите номер телефона..."
+                                                  @bind-Text="@Client.UserInfo.PhoneNumber" Role="TextRole.Telephone">
+                                            <Feedback>
+                                                <ValidationSuccess>Номер соответствует правилам.</ValidationSuccess>
+                                                <ValidationError Multiline="true"/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </FieldBody>
+                                </Field>
+                            </Validation>
+                        </Row>
+                        <Row>
+                            <Field ColumnSize="ColumnSize.Is5.OnDesktop" Horizontal>
+                                <FieldLabel RequiredIndicator>Роль</FieldLabel>
+                                <FieldBody>
+                                    <SelectList TItem="Role"
+                                                TValue="int"
+                                                Data="@Roles"
+                                                TextField="@(item => item.Title)"
+                                                ValueField="@(item => item.IdRole)"
+                                                @bind-SelectedValue="@Client.RoleHasUser.RoleIdRole"
+                                                DefaultItemText="Выберите роль"/>
+                                </FieldBody>
+                            </Field>
+                        </Row>
+                        <Row>
+                            <Buttons>
+                                <Button @onclick="Registration">
+                                    Зарегистрироваться
+                                </Button>
+                                <Button href="/">
+                                    Назад
+                                </Button>
+                            </Buttons>
+                        </Row>
+                    </Form>
+                </Validations>
+            </CardBody>
+        </Card>
+    </Column>
+</Row>
